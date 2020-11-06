@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wgf.objectapp_tflite.main;
+package com.wgf.objectapp_tflite.camera;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -365,6 +365,7 @@ public class CameraConnectionFragment extends Fragment {
   private void openCamera(final int width, final int height) {
     setUpCameraOutputs();
     configureTransform(width, height);
+
     final Activity activity = getActivity();
     final CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
     try {

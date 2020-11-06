@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wgf.objectapp_tflite.main;
+package com.wgf.objectapp_tflite;
 
 import android.Manifest;
 import android.app.Fragment;
@@ -36,27 +36,24 @@ import android.os.HandlerThread;
 import android.os.Trace;
 import android.util.Size;
 import android.view.Surface;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.wgf.objectapp_tflite.R;
 import com.wgf.objectapp_tflite.env.ImageUtils;
 import com.wgf.objectapp_tflite.env.Logger;
+import com.wgf.objectapp_tflite.camera.CameraConnectionFragment;
+import com.wgf.objectapp_tflite.camera.LegacyCameraConnectionFragment;
 
 import java.nio.ByteBuffer;
-
-//import com.wgf.objectapp1.env.ImageUtils;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
-        CompoundButton.OnCheckedChangeListener,
-        View.OnClickListener {
+        CompoundButton.OnCheckedChangeListener {
+
   private static final Logger LOGGER = new Logger();
 
   private static final int PERMISSIONS_REQUEST = 1;
@@ -75,16 +72,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private Runnable postInferenceCallback;
   private Runnable imageConverter;
 
-//  private LinearLayout bottomSheetLayout;
-  private LinearLayout gestureLayout;
-//  private BottomSheetBehavior<LinearLayout> sheetBehavior;
-
-//  protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView;
-//  protected ImageView bottomSheetArrowImageView;
-//  private ImageView plusImageView, minusImageView;
-//  private SwitchCompat apiSwitchCompat;
-//  private TextView threadsTextView;
-
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d(">> onCreate " + this);
@@ -94,31 +81,16 @@ public abstract class CameraActivity extends AppCompatActivity
 
     setContentView(R.layout.activity_main);
 
-//    getSupportActionBar().setDisplayShowTitleEnabled(false);
-
     if (hasPermission()) {
       setFragment();
     } else {
       requestPermission();
     }
-
-/*    apiSwitchCompat.setOnCheckedChangeListener(this);
-
-    plusImageView.setOnClickListener(this);
-    minusImageView.setOnClickListener(this);*/
   }
 
   protected int[] getRgbBytes() {
     imageConverter.run();
     return rgbBytes;
-  }
-
-  protected int getLuminanceStride() {
-    return yRowStride;
-  }
-
-  protected byte[] getLuminance() {
-    return yuvBytes[0];
   }
 
   /** Callback for android.hardware.Camera API */
@@ -441,40 +413,6 @@ public abstract class CameraActivity extends AppCompatActivity
     /*if (isChecked) apiSwitchCompat.setText("NNAPI");
     else apiSwitchCompat.setText("TFLITE");*/
   }
-
-  @Override
-  public void onClick(View v) {
-    /*if (v.getId() == R.id.plus) {
-      String threads = threadsTextView.getText().toString().trim();
-      int numThreads = Integer.parseInt(threads);
-      if (numThreads >= 9) return;
-      numThreads++;
-      threadsTextView.setText(String.valueOf(numThreads));
-      setNumThreads(numThreads);
-    } else if (v.getId() == R.id.minus) {
-      String threads = threadsTextView.getText().toString().trim();
-      int numThreads = Integer.parseInt(threads);
-      if (numThreads == 1) {
-        return;
-      }
-      numThreads--;
-      threadsTextView.setText(String.valueOf(numThreads));
-      setNumThreads(numThreads);
-    }*/
-  }
-
-  /*protected void showFrameInfo(String frameInfo) {
-    frameValueTextView.setText(frameInfo);
-  }
-
-  protected void showCropInfo(String cropInfo) {
-    cropValueTextView.setText(cropInfo);
-  }
-
-  protected void showInference(String inferenceTime) {
-    inferenceTimeTextView.setText(inferenceTime);
-  }
-*/
   protected abstract void processImage();
 
   protected abstract void onPreviewSizeChosen(final Size size, final int rotation);

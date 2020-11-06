@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wgf.objectapp_tflite.main
+package com.wgf.objectapp_tflite
 
 import android.graphics.*
 import android.media.ImageReader
@@ -22,7 +22,6 @@ import android.util.Size
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
-import com.wgf.objectapp_tflite.R
 import com.wgf.objectapp_tflite.detection.OverlayView
 import com.wgf.objectapp_tflite.env.BorderedText
 import com.wgf.objectapp_tflite.env.ImageUtils
@@ -37,22 +36,24 @@ import java.util.*
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
  * objects.
  */
-class DetectorActivity : CameraActivity(),
-    ImageReader.OnImageAvailableListener {
+class MainActivity : CameraActivity(), ImageReader.OnImageAvailableListener {
+
     var trackingOverlay: OverlayView? = null
-    private var sensorOrientation: Int? = null
-    private var detector: Detector? = null
-    private var lastProcessingTimeMs: Long = 0
-    private var rgbFrameBitmap: Bitmap? = null
-    private var croppedBitmap: Bitmap? = null
-    private var cropCopyBitmap: Bitmap? = null
-    private var computingDetection = false
-    private var timestamp: Long = 0
-    private var frameToCropTransform: Matrix? = null
-    private var cropToFrameTransform: Matrix? = null
-    private var tracker: MultiBoxTracker? = null
-    private var borderedText: BorderedText? = null
+    var sensorOrientation: Int? = null
+    var detector: Detector? = null
+    var lastProcessingTimeMs: Long = 0
+    var rgbFrameBitmap: Bitmap? = null
+    var croppedBitmap: Bitmap? = null
+    var cropCopyBitmap: Bitmap? = null
+    var computingDetection = false
+    var timestamp: Long = 0
+    var frameToCropTransform: Matrix? = null
+    var cropToFrameTransform: Matrix? = null
+    var tracker: MultiBoxTracker? = null
+    var borderedText: BorderedText? = null
+
     public override fun onPreviewSizeChosen(size: Size, rotation: Int) {
+
         val textSizePx = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             TEXT_SIZE_DIP,
@@ -61,7 +62,9 @@ class DetectorActivity : CameraActivity(),
         borderedText = BorderedText(textSizePx)
         borderedText!!.setTypeface(Typeface.MONOSPACE)
         tracker = MultiBoxTracker(this)
-        var cropSize = TF_OD_API_INPUT_SIZE
+        var cropSize =
+            TF_OD_API_INPUT_SIZE
+
         try {
             detector =
                 TFLiteObjectDetectionAPIModel.create(
@@ -71,7 +74,8 @@ class DetectorActivity : CameraActivity(),
                     TF_OD_API_INPUT_SIZE,
                     TF_OD_API_IS_QUANTIZED
                 )
-            cropSize = TF_OD_API_INPUT_SIZE
+            cropSize =
+                TF_OD_API_INPUT_SIZE
         } catch (e: IOException) {
             e.printStackTrace()
             LOGGER.e(e, "Exception initializing Detector!")
@@ -108,7 +112,8 @@ class DetectorActivity : CameraActivity(),
         frameToCropTransform = ImageUtils.getTransformationMatrix(
             previewWidth, previewHeight,
             cropSize, cropSize,
-            sensorOrientation!!, MAINTAIN_ASPECT
+            sensorOrientation!!,
+            MAINTAIN_ASPECT
         )
         cropToFrameTransform = Matrix()
         frameToCropTransform!!.invert(cropToFrameTransform)
@@ -238,12 +243,15 @@ class DetectorActivity : CameraActivity(),
         private const val TF_OD_API_IS_QUANTIZED = true
         private const val TF_OD_API_MODEL_FILE = "detect.tflite"
         private const val TF_OD_API_LABELS_FILE = "labelmap.txt"
-        private val MODE = DetectorMode.TF_OD_API
+        private val MODE =
+            DetectorMode.TF_OD_API
 
         // Minimum detection confidence to track a detection.
         private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.5f
         private const val MAINTAIN_ASPECT = false
-        private val DESIRED_PREVIEW_SIZE = Size(640, 480)
+
+        //카메라 해상도를 위한 미리보기 화면 사이즈 설정!
+        private val DESIRED_PREVIEW_SIZE = Size(1920, 960)
         private const val SAVE_PREVIEW_BITMAP = false
         private const val TEXT_SIZE_DIP = 10f
     }

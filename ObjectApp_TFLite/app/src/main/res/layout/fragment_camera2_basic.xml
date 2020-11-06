@@ -29,11 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-<!--    <com.wgf.objectapp1.DrawingView-->
-<!--        android:id="@+id/draw_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"/>-->
-
     <FrameLayout
         android:id="@+id/control"
         android:layout_width="match_parent"

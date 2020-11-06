@@ -1,4 +1,4 @@
-package com.wgf.objectapp_tflite.main;
+package com.wgf.objectapp_tflite.camera;
 
 /*
  * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
